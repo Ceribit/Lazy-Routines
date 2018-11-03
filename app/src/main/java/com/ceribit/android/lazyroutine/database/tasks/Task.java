@@ -2,6 +2,7 @@ package com.ceribit.android.lazyroutine.database.tasks;
 
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
@@ -16,6 +17,25 @@ public class Task {
 
     @Embedded
     private DateTime dateTime;
+
+    @Ignore
+    public Task() {
+        super();
+        dateTime = new DateTime();
+    }
+
+    public Task(String title, String description, DateTime dateTime) {
+        // Check Title
+        if(title == null || title.isEmpty()){ this.title = "No title specified."; }
+        else { this.title = title; }
+
+        // Check DateTime
+        if(dateTime == null) {this.dateTime = new DateTime();}
+        else { this.dateTime = dateTime; }
+
+        // Check description (this can be empty)
+        this.description = description;
+    }
 
     public int getId() {
         return id;

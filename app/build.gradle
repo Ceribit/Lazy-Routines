@@ -39,6 +39,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     testImplementation "android.arch.core:core-testing:$lifecycle_version" // Lifecycle
     testImplementation "android.arch.persistence.room:testing:$room_version" // Room
+    androidTestImplementation "android.arch.core:core-testing:$room_version"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 

@@ -6,5 +6,7 @@ This is a app the aims to effectively utilize Android's notification system to n
  - Allow users to choose days of the week and when they want the notifications
  
 #### Components Used:
- - Room
+ - Room 
  - Architectural Lifecycle Components (LiveData, ModelView, etc...)
+ - JUnit4, Espresso, and various other components for testing
+ 

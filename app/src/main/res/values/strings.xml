@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Lazy Routine</string>
+
+    <!-- Main Activity Strings -->
+    <string name="label_main_title">Below is a list of the tasks you made</string>
+
+    <!-- Add Task Strings -->
+    <string name="add_task_title">Name</string>
+    <string name="add_task_description">Description</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_add">Add</string>
+</resources>

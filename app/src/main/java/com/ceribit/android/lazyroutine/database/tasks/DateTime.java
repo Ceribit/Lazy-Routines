@@ -4,9 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DateTime {
+
+    /*
+     * Standard Hour (24H) and minute variables
+     */
     private int hour;
     private int minute;
 
+    /*
+     * Booleans which specify the days of the week want to be repeated
+     *  (This is not an array since this will be used for databases)
+     */
     private boolean onSunday;
     private boolean onMonday;
     private boolean onTuesday;
@@ -15,10 +23,62 @@ public class DateTime {
     private boolean onFriday;
     private boolean onSaturday;
 
+    /*
+     * Constants representing the position of the day in an array
+     */
+    public static int SUNDAY = 0;
+    public static int MONDAY = 1;
+    public static int TUESDAY = 2;
+    public static int WEDNESDAY = 3;
+    public static int THURSDAY = 4;
+    public static int FRIDAY = 5;
+    public static int SATURDAY = 6;
+
+    /*
+     * Constant to iterate through an array of a week
+     */
+    public static int DAYS_IN_WEEK = 7;
+
     public DateTime() {
         hour = 0;
         minute = 0;
         initializeWeekDays();
+    }
+
+    public DateTime(int hour, int minute){
+        this.hour = hour;
+        this.minute = minute;
+        initializeWeekDays();
+    }
+
+    /*
+     * Constructs an array of booleans representing the week
+     */
+    public List<Boolean> getWeekPreferences() {
+        List<Boolean> weekPreference = new ArrayList<>();
+        weekPreference.add(onSunday);
+        weekPreference.add(onMonday);
+        weekPreference.add(onTuesday);
+        weekPreference.add(onWednesday);
+        weekPreference.add(onThursday);
+        weekPreference.add(onFriday);
+        weekPreference.add(onSaturday);
+        return weekPreference;
+    }
+
+    /*
+     * Sets the repeated days of the week given a boolean of values
+     */
+    public void setWeekDays(List<Boolean> weekDays){
+        if(weekDays.size() == 7) {
+            onSunday = weekDays.get(SUNDAY);
+            onMonday = weekDays.get(MONDAY);
+            onTuesday = weekDays.get(TUESDAY);
+            onWednesday = weekDays.get(WEDNESDAY);
+            onThursday = weekDays.get(THURSDAY);
+            onFriday = weekDays.get(FRIDAY);
+            onSaturday = weekDays.get(SATURDAY);
+        }
     }
 
     private void initializeWeekDays() {
@@ -101,18 +161,6 @@ public class DateTime {
 
     public void setOnSaturday(boolean onSaturday) {
         this.onSaturday = onSaturday;
-    }
-
-    public List<Boolean> getWeekPreferences() {
-        List<Boolean> weekPreference = new ArrayList<>();
-        weekPreference.add(onSunday);
-        weekPreference.add(onMonday);
-        weekPreference.add(onTuesday);
-        weekPreference.add(onWednesday);
-        weekPreference.add(onThursday);
-        weekPreference.add(onFriday);
-        weekPreference.add(onSaturday);
-        return weekPreference;
     }
 }
 

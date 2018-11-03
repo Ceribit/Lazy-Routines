@@ -52,13 +52,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 final Task current = mTasks.get(position-1);
                 viewHolder.mTaskTitleView.setText(current.getTitle());
                 viewHolder.mTaskDescriptionView.setText(current.getDescription());
+                viewHolder.mTaskTimeView.setText(current.getFormattedTime());
                 viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Intent intent = new Intent(view.getContext() , AddOrUpdateTask.class);
                         intent.putExtra(AddOrUpdateTask.TASK_ID, current.getId());
-                        intent.putExtra(AddOrUpdateTask.TASK_TITLE, current.getTitle());
-                        intent.putExtra(AddOrUpdateTask.TASK_DESCRIPTION, current.getDescription());
                         view.getContext().startActivity(intent);
                     }
                 });
@@ -96,11 +95,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     class TaskViewHolder extends RecyclerView.ViewHolder{
         private final TextView mTaskTitleView;
         private final TextView mTaskDescriptionView;
+        private final TextView mTaskTimeView;
 
         private TaskViewHolder(@NonNull View itemView) {
             super(itemView);
             mTaskTitleView = itemView.findViewById(R.id.task_item_title);
             mTaskDescriptionView = itemView.findViewById(R.id.task_item_description);
+            mTaskTimeView = itemView.findViewById(R.id.task_item_time);
         }
     }
 }

@@ -6,6 +6,8 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 
+import java.util.Locale;
+
 @Entity(tableName = "task_table")
 public class Task {
 
@@ -20,7 +22,7 @@ public class Task {
 
     @Ignore
     public Task() {
-        super();
+        title = "No title specified.";
         dateTime = new DateTime();
     }
 
@@ -63,6 +65,11 @@ public class Task {
 
     public DateTime getDateTime() {
         return dateTime;
+    }
+
+    public String getFormattedTime(){
+        return String.format(Locale.US, "%02d", dateTime.getHour()) + ":" +
+               String.format(Locale.US,"%02d",dateTime.getMinute());
     }
 
     public void setDateTime(DateTime dateTime) {

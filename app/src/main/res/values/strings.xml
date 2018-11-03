@@ -9,4 +9,6 @@
     <string name="add_task_description">Description</string>
     <string name="btn_save">Save</string>
     <string name="btn_add">Add</string>
+    <string name="btn_delete">Delete</string>
+
 </resources>

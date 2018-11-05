@@ -12,7 +12,7 @@
     <string name="btn_delete">Delete</string>
 
     <!-- Weather Item Strings -->
-    <string name="weather_item_title">Today\'s Forecast Summary</string>
+    <string name="weather_item_title">Today\'s Forecast</string>
     <string name="weather_city_label">City</string>
     <string name="weather_minimum_temperature_label">Today\'s Low</string>
     <string name="weather_maximum_temperature_label">Today\'s High</string>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="128dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/primaryLightColor"
+    android:layout_margin="8dp">
+
+    <TextView
+        android:id="@+id/weather_item_title"
+        android:text="@string/weather_item_title"
+        android:layout_margin="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
+
+    <TextView
+        android:id="@+id/task_item_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Location"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <!-- Max Temperature Views -->
+    <TextView
+        android:id="@+id/weather_max_temp_label"
+        android:text="@string/weather_maximum_temperature_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/weather_item_title"
+        app:layout_constraintLeft_toLeftOf="@id/weather_item_title"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        />
+    <TextView
+        android:id="@+id/weather_item_max_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="20.0F"
+        app:layout_constraintTop_toBottomOf="@id/weather_max_temp_label"
+        app:layout_constraintLeft_toLeftOf="@id/weather_item_title"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"/>
+
+
+
+    <!-- Min Temperature Views-->
+    <TextView
+        android:id="@+id/weather_item_min_temp_label"
+        android:text="@string/weather_minimum_temperature_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/weather_item_max_temperature"
+        app:layout_constraintLeft_toLeftOf="@id/weather_item_title"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Small"
+        />
+    <TextView
+        android:id="@+id/task_item_min_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="-20.0F"
+        app:layout_constraintTop_toBottomOf="@id/weather_item_min_temp_label"
+        app:layout_constraintLeft_toLeftOf="@id/weather_item_title"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small"/>
+</android.support.constraint.ConstraintLayout>

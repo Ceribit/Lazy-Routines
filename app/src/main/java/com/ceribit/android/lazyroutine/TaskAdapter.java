@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ceribit.android.lazyroutine.database.tasks.Task;
+import com.ceribit.android.lazyroutine.database.weather.WeatherPreferences;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ import java.util.List;
  * This class helps facilitate information for the List of tasks stored in the database and
  * the WeatherUtil information set by the user
  */
-public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private final LayoutInflater mInflater;
     private List<Task> mTasks;
@@ -26,46 +27,68 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         mInflater = LayoutInflater.from(context);
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
+
     /**
      * Creates standard view holder using the task_list_item.xml layout
      */
     @NonNull
     @Override
-    public TaskViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.task_list_item, parent, false);
-        return new TaskViewHolder(itemView);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        switch(viewType){
+            case 0:
+                return new WeatherViewHolder(
+                        mInflater.inflate(R.layout.weather_list_item, parent, false)
+                );
+
+            default:
+                return new TaskViewHolder(
+                        mInflater.inflate(R.layout.task_list_item, parent, false));
+        }
     }
 
 
 
     /**
      * Assigns data from the task List {@link List<Task>} for a given position
+     * TODO: Create WeatherPreference function that returns the temperature with the correct metric
      */
     @Override
-    public void onBindViewHolder(@NonNull TaskViewHolder viewHolder, int position) {
-        if(position == 0) {
-            viewHolder.mTaskTitleView.setText("Weather");
-            viewHolder.mTaskDescriptionView.setText("");
-            viewHolder.itemView.setOnClickListener(null);
-        } else {
-            if (mTasks != null) {
-                final Task current = mTasks.get(position-1);
-                viewHolder.mTaskTitleView.setText(current.getTitle());
-                viewHolder.mTaskDescriptionView.setText(current.getDescription());
-                viewHolder.mTaskTimeView.setText(current.getFormattedTime());
-                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intent = new Intent(view.getContext() , AddOrUpdateTask.class);
-                        intent.putExtra(AddOrUpdateTask.TASK_ID, current.getId());
-                        view.getContext().startActivity(intent);
-                    }
-                });
-            } else {
-                viewHolder.mTaskTitleView.setText("No title found.");
-            }
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+        switch (viewHolder.getItemViewType()){
+            case 0:
+                WeatherViewHolder weatherViewHolder = (WeatherViewHolder) viewHolder;
+                weatherViewHolder.mCityTitleView.setText(WeatherPreferences.getCity());
+                weatherViewHolder.mMinTemperatureView.setText(
+                        WeatherPreferences.getFormattedTemperature(
+                                WeatherPreferences.getLowTemperature(),"Low"));
+                weatherViewHolder.mMaxTemperatureView.setText(
+                        WeatherPreferences.getFormattedTemperature(
+                                WeatherPreferences.getHighTemperature(), "High"));
+                break;
+            default:
+                TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
+                if(mTasks != null) {
+                    final Task current = mTasks.get(position - 1);
+                    taskViewHolder.mTaskTitleView.setText(current.getTitle());
+                    taskViewHolder.mTaskDescriptionView.setText(current.getDescription());
+                    taskViewHolder.mTaskTimeView.setText(current.getFormattedTime());
+                    taskViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(view.getContext(), AddOrUpdateTask.class);
+                            intent.putExtra(AddOrUpdateTask.TASK_ID, current.getId());
+                            view.getContext().startActivity(intent);
+                        }
+                    });
+                } else{
+                    taskViewHolder.mTaskTitleView.setText("No title found.");
+                }
+                break;
         }
-
     }
 
     /**
@@ -92,7 +115,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
     /**
      * Creates ViewHolder for the recycler_item
      */
-    class TaskViewHolder extends RecyclerView.ViewHolder{
+    private class TaskViewHolder extends RecyclerView.ViewHolder{
         private final TextView mTaskTitleView;
         private final TextView mTaskDescriptionView;
         private final TextView mTaskTimeView;
@@ -102,6 +125,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
             mTaskTitleView = itemView.findViewById(R.id.task_item_title);
             mTaskDescriptionView = itemView.findViewById(R.id.task_item_description);
             mTaskTimeView = itemView.findViewById(R.id.task_item_time);
+        }
+    }
+
+    private class WeatherViewHolder extends RecyclerView.ViewHolder{
+        private final TextView mCityTitleView;
+        private final TextView mMinTemperatureView;
+        private final TextView mMaxTemperatureView;
+
+        private WeatherViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mCityTitleView = itemView.findViewById(R.id.task_item_city);
+            mMinTemperatureView = itemView.findViewById(R.id.task_item_min_temperature);
+            mMaxTemperatureView = itemView.findViewById(R.id.weather_item_max_temperature);
         }
     }
 }

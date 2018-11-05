@@ -12,6 +12,9 @@ import android.view.View;
 
 import com.ceribit.android.lazyroutine.database.tasks.Task;
 import com.ceribit.android.lazyroutine.database.tasks.TaskViewModel;
+import com.ceribit.android.lazyroutine.database.weather.UpdateTemperatureAsyncTask;
+import com.ceribit.android.lazyroutine.database.weather.WeatherPreferences;
+import com.ceribit.android.lazyroutine.database.weather.WeatherUtils;
 
 import java.util.List;
 
@@ -23,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        WeatherPreferences.init(this);
+        WeatherPreferences.setCity("Houston");
+
+        new UpdateTemperatureAsyncTask(this).execute();
 
         RecyclerView recyclerView = findViewById(R.id.main_container);
         final TaskAdapter adapter = new TaskAdapter(this);

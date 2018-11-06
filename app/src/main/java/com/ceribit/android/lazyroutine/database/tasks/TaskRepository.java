@@ -50,7 +50,9 @@ public class TaskRepository {
 
         @Override
         protected Void doInBackground(Task... tasks) {
-            mAsyncTaskDao.insert(tasks[0]);
+            if(!tasks[0].getTitle().isEmpty()) {
+                mAsyncTaskDao.insert(tasks[0]);
+            }
             return null;
         }
     }
@@ -66,7 +68,9 @@ public class TaskRepository {
 
         @Override
         protected Void doInBackground(Task... tasks) {
-            mAsyncTaskDao.updateTask(tasks[0]);
+            if(!tasks[0].getTitle().isEmpty()) {
+                mAsyncTaskDao.updateTask(tasks[0]);
+            }
             return null;
         }
     }

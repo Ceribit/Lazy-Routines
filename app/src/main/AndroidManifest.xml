@@ -19,7 +19,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddOrUpdateTask"></activity>
+        <activity android:name=".AddOrUpdateTask"> </activity>
+        <receiver android:name=".notifications.NotificationReceiver" />
     </application>
 
 </manifest>

@@ -16,4 +16,8 @@
     <string name="weather_city_label">City</string>
     <string name="weather_minimum_temperature_label">Today\'s Low</string>
     <string name="weather_maximum_temperature_label">Today\'s High</string>
+
+    <!-- Notification Strings -->
+    <string name="main_notification_channel_name">Primary</string>
+
 </resources>

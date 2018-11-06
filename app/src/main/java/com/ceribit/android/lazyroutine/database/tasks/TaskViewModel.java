@@ -3,6 +3,7 @@ package com.ceribit.android.lazyroutine.database.tasks;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -26,4 +27,5 @@ public class TaskViewModel extends AndroidViewModel {
     public Task getTask(int id){ return mRepository.getTask(id); }
 
     public void delete(Task task) {mRepository.delete(task); }
+
 }

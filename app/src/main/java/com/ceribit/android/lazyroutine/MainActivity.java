@@ -15,6 +15,7 @@ import com.ceribit.android.lazyroutine.database.tasks.TaskViewModel;
 import com.ceribit.android.lazyroutine.database.weather.UpdateTemperatureAsyncTask;
 import com.ceribit.android.lazyroutine.database.weather.WeatherPreferences;
 import com.ceribit.android.lazyroutine.database.weather.WeatherUtils;
+import com.ceribit.android.lazyroutine.notifications.NotificationUtils;
 
 import java.util.List;
 
@@ -43,12 +44,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(@Nullable List<Task> tasks) {
                 adapter.setTasks(tasks);
+                NotificationUtils.addOrReplaceAlarms(getBaseContext(), tasks);
             }
         });
     }
 
     public void goToAddTask(View view){
         Intent intent = new Intent(this, AddOrUpdateTask.class);
+        //NotificationUtils.notifyUserWithMessage(this, "Hello world");
         startActivity(intent);
     }
 }

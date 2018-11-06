@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.ceribit.android.lazyroutine.database.tasks.Task;
 import com.ceribit.android.lazyroutine.database.weather.WeatherPreferences;
+import com.ceribit.android.lazyroutine.notifications.NotificationUtils;
 
 import java.util.List;
 
@@ -54,10 +55,10 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     /**
      * Assigns data from the task List {@link List<Task>} for a given position
-     * TODO: Create WeatherPreference function that returns the temperature with the correct metric
+     * TODO: Create WeatherPreference function that returns the temperature with the correct metric (CASE 0)
      */
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()){
             case 0:
                 WeatherViewHolder weatherViewHolder = (WeatherViewHolder) viewHolder;
@@ -70,18 +71,19 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                                 WeatherPreferences.getHighTemperature(), "High"));
                 break;
             default:
-                TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
+                final TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;
                 if(mTasks != null) {
-                    final Task current = mTasks.get(position - 1);
-                    taskViewHolder.mTaskTitleView.setText(current.getTitle());
-                    taskViewHolder.mTaskDescriptionView.setText(current.getDescription());
-                    taskViewHolder.mTaskTimeView.setText(current.getFormattedTime());
+                    final Task currentTask = mTasks.get(position - 1);
+                    taskViewHolder.mTaskTitleView.setText(currentTask.getTitle());
+                    taskViewHolder.mTaskDescriptionView.setText(currentTask.getDescription());
+                    taskViewHolder.mTaskTimeView.setText(currentTask.getFormattedTime());
                     taskViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
                             Intent intent = new Intent(view.getContext(), AddOrUpdateTask.class);
-                            intent.putExtra(AddOrUpdateTask.TASK_ID, current.getId());
+                            intent.putExtra(AddOrUpdateTask.TASK_ID, currentTask.getId());
                             view.getContext().startActivity(intent);
+                            NotificationUtils.scheduleRepeatedTask(taskViewHolder.mTaskTimeView.getContext(), currentTask);
                         }
                     });
                 } else{

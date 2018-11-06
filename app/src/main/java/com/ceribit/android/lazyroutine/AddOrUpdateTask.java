@@ -14,6 +14,7 @@ import android.widget.TimePicker;
 import com.ceribit.android.lazyroutine.database.tasks.DateTime;
 import com.ceribit.android.lazyroutine.database.tasks.Task;
 import com.ceribit.android.lazyroutine.database.tasks.TaskViewModel;
+import com.ceribit.android.lazyroutine.notifications.NotificationUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,6 +94,8 @@ public class AddOrUpdateTask extends AppCompatActivity {
             deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    Task task = mTaskViewModel.getTask(taskId);
+                    NotificationUtils.removeNotifier(getBaseContext(), task);
                     mTaskViewModel.delete(mTaskViewModel.getTask(taskId));
                     onBackPressed();
                 }

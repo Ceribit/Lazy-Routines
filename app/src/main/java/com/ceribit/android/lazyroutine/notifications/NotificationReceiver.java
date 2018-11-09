@@ -20,11 +20,14 @@ public class NotificationReceiver extends BroadcastReceiver {
         Log.e("NotificationReceiever", "Task receieved: "
                 + "\nID: " + taskId
                 + "\nTitle: " + taskTitle
-                + "\nDesc: " + taskDescription);
+                + "\nDesc: " + taskDescription
+                + "\n---------------------------------------");
         // Set flag to restart/relaunch app
         intentToRepeat.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         // Pending intent to handle launch of activity
         NotificationUtils.notifyUserWithMessage(context, taskTitle, taskDescription, taskId) ;
     }
+
+
 }

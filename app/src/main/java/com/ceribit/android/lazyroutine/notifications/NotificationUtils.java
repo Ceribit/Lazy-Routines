@@ -98,6 +98,7 @@ public class NotificationUtils {
 
         // Set time ( hour and minute) that the user wishes for the notification to be given
         Calendar calendar = Calendar.getInstance();
+        Long currentTime = calendar.getTimeInMillis();
         calendar.set(Calendar.HOUR_OF_DAY, task.getDateTime().getHour());
         calendar.set(Calendar.MINUTE, task.getDateTime().getMinute());
 
@@ -124,15 +125,23 @@ public class NotificationUtils {
                     int calendarDay = getDayFromCalendar(i);
                     calendar.set(Calendar.DAY_OF_WEEK, calendarDay);
 
-                    // Set alarm pending intent
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                            context, LAZY_ROUTINE_NOTIFICATION_ID+task.getId()+calendarDay,
-                            intent, PendingIntent.FLAG_ONE_SHOT);
+                    // Check if the date is before or after the current date
+                    if (calendar.getTimeInMillis() > currentTime) {
+                        // Set alarm pending intent
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                                context,
+                                8 * task.getId() + calendarDay,
+                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
-                            AlarmManager.INTERVAL_DAY*7, pendingIntent);
-                    Log.e(LOG_TAG, "Task: " + task.getTitle());
-                    Log.e(LOG_TAG, "Time until alarm turns on " + (calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis()));
+                        alarmManager.cancel(pendingIntent);
+                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+                                AlarmManager.INTERVAL_DAY * 7, pendingIntent);
+                        Log.e(LOG_TAG, "Task: " + task.getTitle());
+                        Log.e(LOG_TAG, "Day: " + i);
+                        Log.e(LOG_TAG, "TASK ID: " + task.getId());
+                        Log.e(LOG_TAG, "Time until alarm turns on " + (calendar.getTimeInMillis() - Calendar.getInstance().getTimeInMillis()));
+                        Log.e(LOG_TAG, "\n");
+                    }
                 }
             }
         }
@@ -142,18 +151,25 @@ public class NotificationUtils {
         // Set pending intent that is used for the particular task
         Intent intent = new Intent(context, NotificationReceiver.class);
 
-        // Create notification pending intent
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                context, AlarmManager.RTC, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-
         // Get alarm manager
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-
-        try {
-            alarmManager.cancel(pendingIntent);
-        } catch (NullPointerException e){
-            Log.e(LOG_TAG, "Notification Receiver was not canceled. " + e.toString());
+        // Create notification pending intent
+        // TODO : Create a more robust way to get cancel PendingIDs
+        for(int i = 0; i < 100; i++){
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                    context, LAZY_ROUTINE_NOTIFICATION_ID+i, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+            try {
+                alarmManager.cancel(pendingIntent);
+            } catch (NullPointerException e){
+                Log.e(LOG_TAG, "Notification Receiver was not canceled. " + e.toString());
+            }
+            pendingIntent.cancel();
         }
+
+
+
+
+
     }
 
     /**

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.ceribit.android.lazyroutine.database.tasks.Task;
+import com.ceribit.android.lazyroutine.database.weather.UpdateTemperatureAsyncTask;
 import com.ceribit.android.lazyroutine.database.weather.WeatherPreferences;
 import com.ceribit.android.lazyroutine.notifications.NotificationUtils;
 
@@ -61,6 +62,7 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int position) {
         switch (viewHolder.getItemViewType()){
             case 0:
+                new UpdateTemperatureAsyncTask(viewHolder.itemView.getContext()).execute();
                 WeatherViewHolder weatherViewHolder = (WeatherViewHolder) viewHolder;
                 weatherViewHolder.mCityTitleView.setText(WeatherPreferences.getCity());
                 weatherViewHolder.mMinTemperatureView.setText(
@@ -69,6 +71,13 @@ public class TaskAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 weatherViewHolder.mMaxTemperatureView.setText(
                         WeatherPreferences.getFormattedTemperature(
                                 WeatherPreferences.getHighTemperature(), "High"));
+                weatherViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(view.getContext(), WeatherActivity.class);
+                        view.getContext().startActivity(intent);
+                    }
+                });
                 break;
             default:
                 final TaskViewHolder taskViewHolder = (TaskViewHolder) viewHolder;

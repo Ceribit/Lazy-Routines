@@ -1,8 +1,14 @@
 package com.ceribit.android.lazyroutine.database.weather;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
+import com.ceribit.android.lazyroutine.database.tasks.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 public class WeatherPreferences {
@@ -12,12 +18,21 @@ public class WeatherPreferences {
     private static final String UNIT_KEY = "unit-key";
     private static final String LOW_TEMP_KEY = "low-temperature-key";
     private static final String HIGH_TEMP_KEY = "high-temperature-key";
+    private static final String MONDAY_KEY = "weather-monday";
+    private static final String TUESDAY_KEY = "weather-tuesday";
+    private static final String WEDNESDAY_KEY = "weather-wednesday";
+    private static final String THURSDAY_KEY = "weather-thursday";
+    private static final String FRIDAY_KEY = "weather-friday";
+    private static final String SATURDAY_KEY = "weather-saturday";
+    private static final String SUNDAY_KEY = "weather-sunday";
+    private static final String HOUR_KEY = "weather-hour";
+    private static final String MINUTE_KEY = "weather-minute";
 
     private static SharedPreferences INSTANCE;
 
-    public static void init(Activity activity){
+    public static void init(Context context){
         if(INSTANCE == null) {
-            INSTANCE = activity.getSharedPreferences(activity.getPackageName(), Activity.MODE_PRIVATE);
+            INSTANCE = context.getSharedPreferences(context.getPackageName(), Activity.MODE_PRIVATE);
         }
     }
 
@@ -113,5 +128,24 @@ public class WeatherPreferences {
      */
     public static String getFormattedTemperature(float temperature, String type){
         return type + ": " + String.format(Locale.getDefault(), "%.1f", temperature);
+    }
+
+    /**
+     * Get DateTime object using preferences
+     */
+    public static DateTime getDateTime(){
+        int hour = INSTANCE.getInt(HOUR_KEY, 0);
+        int minute = INSTANCE.getInt(MINUTE_KEY, 0);
+        List<Boolean> weekPreference = new ArrayList<>();
+        weekPreference.add(INSTANCE.getBoolean(SUNDAY_KEY, true));
+        weekPreference.add(INSTANCE.getBoolean(MONDAY_KEY, true));
+        weekPreference.add(INSTANCE.getBoolean(TUESDAY_KEY, true));
+        weekPreference.add(INSTANCE.getBoolean(WEDNESDAY_KEY, true));
+        weekPreference.add(INSTANCE.getBoolean(THURSDAY_KEY, true));
+        weekPreference.add(INSTANCE.getBoolean(FRIDAY_KEY, true));
+        weekPreference.add(INSTANCE.getBoolean(SATURDAY_KEY, true));
+        DateTime dateTime = new DateTime(hour,minute);
+        dateTime.setWeekDays(weekPreference);
+        return dateTime;
     }
 }

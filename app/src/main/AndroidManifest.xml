@@ -19,8 +19,24 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AddOrUpdateTask"> </activity>
-        <receiver android:name=".notifications.NotificationReceiver" />
+
+
+        <activity android:name=".AddOrUpdateTask"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+
+        <receiver android:name=".notifications.TaskNotificationReceiever" />
+
+        <activity android:name=".WeatherActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
+        <receiver android:name=".notifications.WeatherNotificationReceiever" />
+
     </application>
 
 </manifest>

@@ -1,6 +1,7 @@
 package com.ceribit.android.lazyroutine.database.weather;
 
 import android.app.Activity;
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
 
@@ -27,8 +28,8 @@ public class WeatherUtils {
     /**
      * Updates temperature stored in SharedPreferences using the parameters found in it
      */
-    public static void updateTemperature(Activity activity){
-        WeatherPreferences.init(activity);
+    public static void updateTemperature(Context context){
+        WeatherPreferences.init(context);
 
         final String QUERY_PARAM = "q";
         final String FORMAT_PARAM = "mode";

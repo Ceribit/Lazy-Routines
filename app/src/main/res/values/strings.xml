@@ -6,18 +6,31 @@
 
     <!-- Add Task Strings -->
     <string name="add_task_title">Name</string>
-    <string name="add_task_description">Description</string>
+    <string name="add_task_description">Message</string>
     <string name="btn_save">Save</string>
     <string name="btn_add">Add</string>
     <string name="btn_delete">Delete</string>
 
     <!-- Weather Item Strings -->
     <string name="weather_item_title">Today\'s Forecast</string>
-    <string name="weather_city_label">City</string>
+    <string name="weather_item_city_label">City</string>
     <string name="weather_minimum_temperature_label">Today\'s Low</string>
     <string name="weather_maximum_temperature_label">Today\'s High</string>
+
+    <!-- Weather Activity Strings -->
+    <string name="weather_activity_city_label">Current City</string>
+    <string name="weather_activity_time_label">Time</string>
+
 
     <!-- Notification Strings -->
     <string name="main_notification_channel_name">Primary</string>
 
+    <!-- DateTime Strings -->
+    <string name="label_monday">Mo</string>
+    <string name="label_tuesday">Tu</string>
+    <string name="label_wednesday">We</string>
+    <string name="label_thursday">Th</string>
+    <string name="label_friday">Fr</string>
+    <string name="label_saturday">Sa</string>
+    <string name="label_sunday">Su</string>
 </resources>

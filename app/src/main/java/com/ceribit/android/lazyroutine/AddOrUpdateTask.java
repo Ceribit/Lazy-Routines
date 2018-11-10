@@ -37,7 +37,7 @@ public class AddOrUpdateTask extends AppCompatActivity {
     // Intent Identifiers
     public static String TASK_ID = "task-id";
 
-    // Intent Defalt Values
+    // Intent Default Values
     public static int NO_TASK = -1;
     public static String EMPTY_TASK = "";
 
@@ -59,10 +59,9 @@ public class AddOrUpdateTask extends AppCompatActivity {
         Button saveButton = findViewById(R.id.btn_add_task);
         Button deleteButton = findViewById(R.id.btn_delete_task);
 
+        // Get notification times
         mTimePicker = findViewById(R.id.time_picker);
-
         mWeekCheckBoxes = new CheckBox[DateTime.DAYS_IN_WEEK];
-
         for(int i = 0; i < DateTime.DAYS_IN_WEEK; i++) {
             mWeekCheckBoxes[i] = findViewById(mCheckBoxIds[i]);
         }

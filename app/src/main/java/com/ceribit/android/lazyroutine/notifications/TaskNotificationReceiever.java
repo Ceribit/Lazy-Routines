@@ -8,7 +8,7 @@ import android.util.Log;
 
 import com.ceribit.android.lazyroutine.MainActivity;
 
-public class NotificationReceiver extends BroadcastReceiver {
+public class TaskNotificationReceiever extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         // Relaunch app when user clicks on notification

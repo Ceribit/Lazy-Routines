@@ -1,22 +1,25 @@
 package com.ceribit.android.lazyroutine.database.weather;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.AsyncTask;
+
+import com.ceribit.android.lazyroutine.database.tasks.DateTime;
 
 import java.lang.ref.WeakReference;
 
 public class UpdateTemperatureAsyncTask extends AsyncTask<Void, Void, Void> {
 
-    private WeakReference<Activity> preferenceActivity;
+    private WeakReference<Context> mContext;
 
-    public UpdateTemperatureAsyncTask(Activity activity) {
+    public UpdateTemperatureAsyncTask(Context context) {
         super();
-        preferenceActivity = new WeakReference<>(activity);
+        mContext = new WeakReference<>(context);
     }
 
     @Override
     protected Void doInBackground(Void... voids) {
-        WeatherUtils.updateTemperature(preferenceActivity.get());
+        WeatherUtils.updateTemperature(mContext.get().getApplicationContext());
         return null;
     }
 }

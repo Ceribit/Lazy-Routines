@@ -13,6 +13,7 @@ import android.util.Log;
 import com.ceribit.android.lazyroutine.R;
 import com.ceribit.android.lazyroutine.database.tasks.DateTime;
 import com.ceribit.android.lazyroutine.database.tasks.Task;
+import com.ceribit.android.lazyroutine.database.weather.WeatherPreferences;
 
 import java.util.Calendar;
 import java.util.List;
@@ -23,7 +24,7 @@ public class NotificationUtils {
      * This notification ID is used to access the notification after displaying it
      */
     private static final int LAZY_ROUTINE_NOTIFICATION_ID = 1204;
-
+    private static final int WEATHER_NOTIFICATION_ID = 43262563;
     /**
      * Pending intent ID used to uniquely reference the pending intent
      */
@@ -44,13 +45,69 @@ public class NotificationUtils {
     /**
      * Cancels all scheduled notification and recreates them
      */
-    public static void addOrReplaceAlarms(Context context, List<Task> tasks){
-        Log.e(LOG_TAG, "addOrReplaceAlarms called;");
+    public static void setTaskAlarms(Context context, List<Task> tasks){
+        Log.e(LOG_TAG, "setTaskAlarms called;");
         cancelAllRepeatedNotifications(context);
         for(int i = 0; i < tasks.size(); i++){
             scheduleRepeatedTask(context, tasks.get(i));
             Log.e(LOG_TAG, tasks.get(i).getTitle());
             Log.e(LOG_TAG, tasks.get(i).getDescription());
+        }
+    }
+
+    /**
+     * Sets Weather Alarm using information from WeatherPreferences
+     */
+    public static void setWeatherAlarm(Context context){
+
+        // Set time ( hour and minute) that the user wishes for the notification to be given
+        DateTime dateTime = WeatherPreferences.getDateTime();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.MINUTE, 10);
+        Long currentTime = Calendar.getInstance().getTimeInMillis();
+        // TODO: Temporary, remove this after I finish testing
+//        calendar.set(Calendar.HOUR_OF_DAY, dateTime.getHour());
+//        calendar.set(Calendar.MINUTE, dateTime.getMinute());
+
+        // Set intent to the broadcast receiver that will take the task
+        Intent intent = new Intent(context.getApplicationContext(), WeatherNotificationReceiever.class);
+
+        // Get alarm manager
+        AlarmManager alarmManager = (AlarmManager) context.getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+
+        // Creates intent for each of the task
+        if(alarmManager != null) {
+            List<Boolean> dayIsRepeated = dateTime.getWeekPreferences();
+            for (int i = 0; i < DateTime.DAYS_IN_WEEK; i++) {
+                Log.e("Alarm", "alarm" + i);
+                Log.e("Alarm2", "Desc: " + dayIsRepeated.toString());
+                // Create Intent for each selected day
+                if (dayIsRepeated.get(i)) {
+
+                    // Set Day
+                    int calendarDay = getDayFromCalendar(i);
+                    calendar.set(Calendar.DAY_OF_WEEK, calendarDay);
+
+
+                    // Check if the date is before or after the current date
+                    if (calendar.getTimeInMillis() > currentTime) {
+                        Log.e("WeatherActivity", "Alarm will execute in " + (calendar.getTimeInMillis() - currentTime));
+
+                        // Set alarm pending intent
+                        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                                context.getApplicationContext(),
+                                WEATHER_NOTIFICATION_ID,
+                                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        alarmManager.cancel(pendingIntent);
+                        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP,
+                                Calendar.getInstance().getTimeInMillis()+30000,
+                                AlarmManager.INTERVAL_DAY * 7,
+                                pendingIntent);
+                    }
+                }
+            }
         }
     }
 
@@ -103,7 +160,7 @@ public class NotificationUtils {
         calendar.set(Calendar.MINUTE, task.getDateTime().getMinute());
 
         // Set intent to the broadcast receiver that will take the task
-        Intent intent = new Intent(context, NotificationReceiver.class);
+        Intent intent = new Intent(context, TaskNotificationReceiever.class);
         intent.putExtra(TASK_TITLE, task.getTitle());
         intent.putExtra(TASK_DESCRIPTION, task.getDescription());
         intent.putExtra(TASK_ID, task.getId());
@@ -117,7 +174,6 @@ public class NotificationUtils {
         if(alarmManager != null) {
             List<Boolean> dayIsRepeated = task.getDateTime().getWeekPreferences();
             for (int i = 0; i < DateTime.DAYS_IN_WEEK; i++) {
-
                 // Create Intent for each selected day
                 if (dayIsRepeated.get(i)) {
 
@@ -149,7 +205,7 @@ public class NotificationUtils {
 
     private static void cancelAllRepeatedNotifications(Context context){
         // Set pending intent that is used for the particular task
-        Intent intent = new Intent(context, NotificationReceiver.class);
+        Intent intent = new Intent(context, TaskNotificationReceiever.class);
 
         // Get alarm manager
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -177,7 +233,7 @@ public class NotificationUtils {
      */
     public static void removeNotifier(Context context, Task task){
         // Set pending intent that is used for the particular task
-        Intent intent = new Intent(context, NotificationReceiver.class);
+        Intent intent = new Intent(context, TaskNotificationReceiever.class);
         intent.putExtra(TASK_TITLE, task.getTitle());
         intent.putExtra(TASK_DESCRIPTION, task.getDescription());
         intent.putExtra(TASK_ID, task.getId());

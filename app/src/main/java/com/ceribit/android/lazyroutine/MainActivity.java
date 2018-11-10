@@ -8,13 +8,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 import com.ceribit.android.lazyroutine.database.tasks.Task;
 import com.ceribit.android.lazyroutine.database.tasks.TaskViewModel;
 import com.ceribit.android.lazyroutine.database.weather.UpdateTemperatureAsyncTask;
 import com.ceribit.android.lazyroutine.database.weather.WeatherPreferences;
-import com.ceribit.android.lazyroutine.database.weather.WeatherUtils;
 import com.ceribit.android.lazyroutine.notifications.NotificationUtils;
 
 import java.util.List;
@@ -23,19 +23,20 @@ public class MainActivity extends AppCompatActivity {
 
     private TaskViewModel mTaskViewModel;
 
+    private TaskAdapter mAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         WeatherPreferences.init(this);
-        WeatherPreferences.setCity("Houston");
 
         new UpdateTemperatureAsyncTask(this).execute();
 
         RecyclerView recyclerView = findViewById(R.id.main_container);
-        final TaskAdapter adapter = new TaskAdapter(this);
-        recyclerView.setAdapter(adapter);
+        mAdapter = new TaskAdapter(this);
+        recyclerView.setAdapter(mAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mTaskViewModel = ViewModelProviders.of(this).get(TaskViewModel.class);
@@ -43,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         mTaskViewModel.getAllTasks().observe(this, new Observer<List<Task>>() {
             @Override
             public void onChanged(@Nullable List<Task> tasks) {
-                adapter.setTasks(tasks);
-                NotificationUtils.addOrReplaceAlarms(getBaseContext(), tasks);
+                mAdapter.setTasks(tasks);
+                NotificationUtils.setTaskAlarms(getBaseContext(), tasks);
             }
         });
     }
@@ -53,5 +54,14 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, AddOrUpdateTask.class);
         //NotificationUtils.notifyUserWithMessage(this, "Hello world");
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(mAdapter != null){
+            new UpdateTemperatureAsyncTask(getBaseContext()).execute();
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }
